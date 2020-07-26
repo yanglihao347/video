@@ -2,7 +2,7 @@
   height: 100%;
   header {
     height: 50px;
-    background: #eee;
+    background: #f7f7f7;
   }
 
   .return-btn {
@@ -45,14 +45,21 @@
 
   .sidebar-container {
     flex: 0 0 300px;
-    padding: 0 16px;
     height: 100%;
-    overflow-y: auto;
+    overflow: hidden;
+    background-color: #e7e7e7;
   }
 
   .is-playing {
     text-align: center;
     padding: 20px 0;
+    height: 80px;
+  }
+
+  .nav-list {
+    height: calc(100% - 80px);
+    padding: 0 16px;
+    overflow-y: auto;
   }
 
   .list-item {
@@ -67,6 +74,12 @@
 
   .player-icon {
     margin-right: 4px;
+  }
+
+  .content-container {
+    text-align: center;
+    flex: 1;
+    margin-top: 20px;
   }
 
   .rate-control {

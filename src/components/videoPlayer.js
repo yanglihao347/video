@@ -28,7 +28,7 @@ export default class VideoPlayer extends Component {
     const { data } = this.state;
 
     return (
-      <ul>{data && data.map((item) => {
+      <ul className={styles['nav-list']}>{data && data.map((item) => {
         return (
           <li
             className={styles['list-item']}
@@ -54,7 +54,12 @@ export default class VideoPlayer extends Component {
     return (
       <div className={styles['video-player']}>
         <header>
-          <div className={styles['return-btn']}>
+          <div
+            className={styles['return-btn']}
+            onClick={() => {
+              // 路由跳转
+            }}
+          >
             <i className={`iconfont ${styles['return-icon']}`}>&#xe677;</i>
             <span className={styles['homepage-text']}>首页</span>
           </div>
@@ -65,7 +70,7 @@ export default class VideoPlayer extends Component {
         <div className={styles['container']}>
           <div className={styles['sidebar-container']}>
             <div className={styles['is-playing']}>
-              <div>正在播放</div>
+              <div>正在播放：</div>
               <div>{this.state.src}</div>
             </div>
             {this.renderList()}
@@ -93,6 +98,9 @@ export default class VideoPlayer extends Component {
                   rate: '2'
                 })
               }}>2倍速</Button>
+              <a download href={'./videos/' + this.state.src} style={{color: '#fff'}}>
+                下载
+              </a>
             </div>
           </div>
         </div>
