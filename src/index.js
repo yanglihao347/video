@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import './common.scss';
 import VideoPlayer from './components/videoPlayer';
+import HomePage from './components/HomePage';
 
 class App extends Component {
 
@@ -25,9 +26,14 @@ class App extends Component {
           {/* <Route path="/about">
             <About />
           </Route> */}
-          <Route path="/">
+          <Route path="/video">
             <VideoPlayer />
           </Route>
+          <Route path="/">
+            <HomePage />
+          </Route>
+          
+          
           {/* <Route path="/">
             <Home />
           </Route> */}
