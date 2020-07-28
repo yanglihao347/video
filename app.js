@@ -8,11 +8,13 @@ app.use(express.static('dist'))
 app.use(bodyParser.urlencoded());
 
 app.post('/getCollections', function(req, res) {
+  var ip = getClientIP(req);
   res.header('Access-Control-Allow-Origin', '*');
   fs.readdir('./dist/videos', function(err, collections) {
     res.json({
       code: 200,
-      data: collections
+      data: collections,
+      ip,
     })
   })
 })
@@ -63,7 +65,13 @@ app.post('/getFiles', function(req, res) {
   })
 })
 
-app.listen(3001, function() {
+app.listen(3001, '0.0.0.0', function() {
   console.log('服务启动成功，端口3001')
 })
 
+function getClientIP(req) {
+  return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
+      req.connection.remoteAddress || // 判断 connection 的远程 IP
+      req.socket.remoteAddress || // 判断后端的 socket 的 IP
+      req.connection.socket.remoteAddress;
+};
