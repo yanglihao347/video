@@ -24,68 +24,36 @@ app.post('/query', function(req, res) {
   res.header('Access-Control-Allow-Origin', '*');
   fs.readdir(`./dist/videos/${collectionName}`, function(err, dirs) {
     const mp4Reg = /\.mp4$/i;
-    const zipReg = /\.(zip|pdf|rar)$/i;
+    const zipReg = /\.(zip|pdf|rar|png|jpg|downloading|cfg)$/i;
     const filesList = [];
     dirs.map((dir) => {
       if (mp4Reg.test(dir)) {
         filesList.push(dir);
       }
     })
-    function sortNumber(a,b){
-      return a - b
-    }
-    const reg = /-((.)+?)\s/;
-    const hashObj = {};
-    const sortArr = [];
-    filesList && filesList.map((file) => {
-      let matchResult = file.match(reg);
-      if(matchResult) {
-        sortArr.push(Number(file.match(reg)[1]));
-        hashObj[file.match(reg)[1]] = file.match(reg).input
-      }
-    })
-    const newFilesList = [];
-    sortArr.sort(sortNumber);
-    sortArr.map((index) => {
-      newFilesList.push(hashObj[index]);
-    })
-    
+
     Promise.all(dirs.map((dir) => {
       if (mp4Reg.test(dir)) {
         return dir;
       } else if(!zipReg.test(dir)) {
         return new Promise((resolve, reject) => {fs.readdir(`./dist/videos/${collectionName}/${dir}`, function(err, files) {
-          const reg = /-((.)+?)\s/;
-          const hashObj = {};
-          const sortArr = [];
-          const filesList = [];
-          
-          files && files.map((file) => {
-            let matchResult = file.match(reg);
-            if(matchResult) {
-              sortArr.push(Number(file.match(reg)[1]));
-              hashObj[file.match(reg)[1]] = file.match(reg).input
-            }
-          })
-          sortArr.sort(sortNumber);
-          sortArr.map((index) => {
-            filesList.push(hashObj[index]);
-          })
-          
-          resolve({name: dir, list: filesList.length ? filesList : files});
+
+          resolve({name: dir, list: sortFiles(files.filter((file) => {
+            return mp4Reg.test(file)
+          }))});
+
         })})
       }
     })).then((dirs) => {
       const data = []
       dirs.map((dir) => {
-        if(typeof(dir) !== 'string') {
+        if(dir && typeof(dir) !== 'string') {
           data.push(dir);
         }
       })
-      console.log(data);
       res.json({
         code: 200,
-        data: newFilesList.length ? newFilesList.concat(data) : filesList.concat(data)
+        data: sortFiles(filesList).concat(data)
       })
     })
   })
@@ -111,6 +79,38 @@ app.post('/getFiles', function(req, res) {
 app.listen(3001, '0.0.0.0', function() {
   console.log('服务启动成功，端口3001')
 })
+
+function sortFiles(fileList) {
+  // const reg = /-((.)+?)\s/;
+  const reg = /^((\d)+)-((\d)+)\s/;
+  const hashObj = {};
+  const sortArr = [];
+  const newList = [];
+  function sortNumber(a,b){
+    const objA = a.trim().split('-');
+    const objB = b.trim().split('-');
+    if (objA[0] > objB[0]) {
+      return 1;
+    } else if (objA[0] < objB[0]) {
+      return -1;
+    } else {
+      return objA[1] - objB[1]
+    }
+  }
+  
+  fileList && fileList.map((file) => {
+    let matchResult = file.match(reg);
+    if(matchResult) {
+      sortArr.push(matchResult[0]);
+      hashObj[matchResult[0]] = matchResult
+    }
+  })
+  sortArr.sort(sortNumber);
+  sortArr.map((index) => {
+    newList.push(hashObj[index]['input']);
+  })
+  return newList.length ? newList : fileList;
+}
 
 function getClientIP(req) {
   return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP

@@ -43,7 +43,7 @@ export default class VideoPlayer extends Component {
     const { data } = this.state;
 
     return (
-      <ul className={styles['nav-list']}>{data && data.map((item) => {
+      <ul className={styles['nav-list']}>{data && data.map((item, fisrtIndex) => {
         if(typeof(item) === 'string') {
           return (
             <li
@@ -51,7 +51,8 @@ export default class VideoPlayer extends Component {
               onClick={() => {
                 this.setState({
                   src: item,
-                  videoName: item
+                  videoName: item,
+                  fisrtIndex,
                 })
               }}
             ><i className={`iconfont ${styles['player-icon']}`}>&#xe6fa;</i>{item}</li>
@@ -61,14 +62,16 @@ export default class VideoPlayer extends Component {
             <li>
               <div className={styles['chapter-title']}>{item.name}</div>
               <ul>
-                {item.list.map((video) => {
+                {item.list.map((video, secondIndex) => {
                   return (
                     <li
                       className={styles['list-item']}
                       onClick={() => {
                         this.setState({
                           videoName: video,
-                          src: `${item.name}/${video}`
+                          src: `${item.name}/${video}`,
+                          secondIndex,
+                          fisrtIndex,
                         })
                       }}
                     ><i className={`iconfont ${styles['player-icon']}`}>&#xe6fa;</i>{video}</li>
