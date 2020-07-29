@@ -13,7 +13,7 @@ export default class VideoPlayer extends Component {
     this.state = {
       videoName: '',
       collectionName: '从基础到实战 手把手带你掌握新版Webpack4.0',
-      rate: '1',
+      rate: 1,
     }
   }
   componentDidMount() {
@@ -37,14 +37,6 @@ export default class VideoPlayer extends Component {
         src,
       });
     })
-    // fetch(`${getEnv()}/getFiles`, {
-    //   method: 'POST'
-    // }).then(res => res.json()).then(data => {
-    //   this.setState({
-    //     data: data?.data,
-    //     src: data?.data[0],
-    //   });
-    // })
   }
 
   renderList() {
@@ -93,13 +85,18 @@ export default class VideoPlayer extends Component {
   }
 
   setRate(rate) {
+    console.log(rate);
     const video = document.getElementById('video');
     video && (video.playbackRate = rate);
   }
 
+  
+
   render() {
-    this.setRate(this.state.rate);
-    const { collectionName } = this.state;
+    const { collectionName, rate, src, videoName } = this.state;
+
+    this.setRate(rate);
+
     return (
       <div className={styles['video-player']}>
         <header>
@@ -114,41 +111,38 @@ export default class VideoPlayer extends Component {
             <span className={styles['homepage-text']}>首页</span>
           </div>
           <div className={styles['collection-name']}>
-            <span>{this.state.collectionName}</span>
+            <span>{collectionName}</span>
           </div>
         </header>
         <div className={styles['container']}>
           <div className={styles['sidebar-container']}>
             <div className={styles['is-playing']}>
               <div>正在播放：</div>
-              <div>{this.state.videoName}</div>
+              <div>{videoName}</div>
             </div>
             {this.renderList()}
           </div>
           <div className={styles['content-container']}>
-            <video id="video" className={styles['abc']} src={`./videos/${collectionName}/${this.state.src}`} controls width="900px" />
+            <video id="video" className={styles['abc']} src={`./videos/${collectionName}/${src}`} controls width="900px" />
             <div className={styles['rate-control']}>
+              <div>{rate%1 === 0 ? rate + '.0X' : rate + 'X'}</div>
+              <Button onClick={() => {
+                
+                this.setState({
+                  rate: (rate * 10 - 2)/10 < 0 ? 0 : (rate * 10 - 2)/10
+                })
+              }}>减速</Button>
               <Button onClick={() => {
                 this.setState({
-                  rate: '1'
+                  rate: 1
                 });
-              }}>1倍速</Button>
+              }}>原速</Button>
               <Button onClick={() => {
                 this.setState({
-                  rate: '1.5'
+                  rate: (rate * 10 + 2)/10 > 5 ? 5 : (rate * 10 + 2)/10
                 })
-              }}>1.5倍速</Button>
-              <Button onClick={() => {
-                this.setState({
-                  rate: '1.75'
-                })
-              }}>1.75倍速</Button>
-              <Button onClick={() => {
-                this.setState({
-                  rate: '2'
-                })
-              }}>2倍速</Button>
-              <a download href={'./videos/' + this.state.src} style={{color: '#fff'}}>
+              }}>加速</Button>
+              <a download href={`./videos/${collectionName}/${src}`} style={{color: '#fff'}}>
                 下载
               </a>
             </div>
