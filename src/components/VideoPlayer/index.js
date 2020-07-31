@@ -14,6 +14,7 @@ export default class VideoPlayer extends Component {
       videoName: '',
       collectionName: '从基础到实战 手把手带你掌握新版Webpack4.0',
       rate: 1,
+      autoPlay: false,
     }
   }
   componentDidMount() {
@@ -42,6 +43,24 @@ export default class VideoPlayer extends Component {
       });
     })
     const video = document.getElementById('video');
+    video.addEventListener('loadedmetadata', () => {
+      console.log('======loadedmetadata');
+    })
+    video.addEventListener('loadeddata', () => {
+      console.log('======loadeddata');
+    })
+    video.addEventListener('canplay', () => {
+      console.log('======canplay');
+    })
+    video.addEventListener('durationchange', () => {
+      if(this.state.autoPlay) {
+        this.setState({
+          autoPlay: false,
+        });
+        video.play();
+      }
+      
+    })
     video.addEventListener('ended', () => {
       let { data, firstIndex, secondIndex, src, videoName } = this.state;
 
@@ -71,6 +90,7 @@ export default class VideoPlayer extends Component {
         secondIndex,
         src,
         videoName,
+        autoPlay: true,
       })
     })
   }
