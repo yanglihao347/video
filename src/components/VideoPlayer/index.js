@@ -30,12 +30,48 @@ export default class VideoPlayer extends Component {
     },).then(res => res.json()).then(res => {
       const data = res.data;
       const videoName = typeof(data[0]) === 'string' ? data[0] : data[0].list[0];
+      const firstIndex = 0;
+      const secondIndex = typeof(data[0]) === 'string' ? '' : 0;
       const src = typeof(data[0]) === 'string' ? data[0] : `${data[0].name}/${data[0].list[0]}`;
       this.setState({
         data,
+        firstIndex,
+        secondIndex,
         videoName,
         src,
       });
+    })
+    const video = document.getElementById('video');
+    video.addEventListener('ended', () => {
+      let { data, firstIndex, secondIndex, src, videoName } = this.state;
+
+      if(secondIndex !== '' && (data[firstIndex].list.length !== secondIndex + 1)) {
+        secondIndex += 1;
+        videoName = data[firstIndex].list[secondIndex];
+        src = `${data[firstIndex].name}/${videoName}`;
+      } else {
+        if (data.length !== firstIndex + 1) {
+          if(typeof(data[firstIndex + 1]) === 'string') {
+            firstIndex += 1;
+            secondIndex = '';
+            videoName = data[firstIndex];
+            src = videoName;
+          } else {
+            firstIndex += 1;
+            secondIndex = 0;
+            videoName = data[firstIndex].list[0];
+            src = `${data[firstIndex].name}/${videoName}`;
+          }
+        } else {
+          //do nothing;
+        }
+      }
+      this.setState({
+        firstIndex,
+        secondIndex,
+        src,
+        videoName,
+      })
     })
   }
 
@@ -43,7 +79,7 @@ export default class VideoPlayer extends Component {
     const { data } = this.state;
 
     return (
-      <ul className={styles['nav-list']}>{data && data.map((item, fisrtIndex) => {
+      <ul className={styles['nav-list']}>{data && data.map((item, firstIndex) => {
         if(typeof(item) === 'string') {
           return (
             <li
@@ -52,7 +88,8 @@ export default class VideoPlayer extends Component {
                 this.setState({
                   src: item,
                   videoName: item,
-                  fisrtIndex,
+                  firstIndex,
+                  secondIndex: '',
                 })
               }}
             ><i className={`iconfont ${styles['player-icon']}`}>&#xe6fa;</i>{item}</li>
@@ -71,7 +108,7 @@ export default class VideoPlayer extends Component {
                           videoName: video,
                           src: `${item.name}/${video}`,
                           secondIndex,
-                          fisrtIndex,
+                          firstIndex,
                         })
                       }}
                     ><i className={`iconfont ${styles['player-icon']}`}>&#xe6fa;</i>{video}</li>
