@@ -43,15 +43,15 @@ export default class VideoPlayer extends Component {
       });
     })
     const video = document.getElementById('video');
-    video.addEventListener('loadedmetadata', () => {
-      console.log('======loadedmetadata');
-    })
-    video.addEventListener('loadeddata', () => {
-      console.log('======loadeddata');
-    })
-    video.addEventListener('canplay', () => {
-      console.log('======canplay');
-    })
+    // video.addEventListener('loadedmetadata', () => {
+    //   console.log('======loadedmetadata');
+    // })
+    // video.addEventListener('loadeddata', () => {
+    //   console.log('======loadeddata');
+    // })
+    // video.addEventListener('canplay', () => {
+    //   console.log('======canplay');
+    // })
     video.addEventListener('durationchange', () => {
       if(this.state.autoPlay) {
         this.setState({
@@ -59,7 +59,6 @@ export default class VideoPlayer extends Component {
         });
         video.play();
       }
-      
     })
     video.addEventListener('ended', () => {
       let { data, firstIndex, secondIndex, src, videoName } = this.state;
@@ -93,17 +92,34 @@ export default class VideoPlayer extends Component {
         autoPlay: true,
       })
     })
+    document.addEventListener('keydown', this.onKeyDown);
+  }
+
+  onKeyDown = (e) => {
+    const { rate } = this.state;
+    switch(e.keyCode) {
+      case 187:
+        this.setState({
+          rate: (rate * 10 + 2)/10 > 5 ? 5 : (rate * 10 + 2)/10
+        })
+        break;
+      case 189:
+        this.setState({
+          rate: (rate * 10 - 2)/10 < 0 ? 0 : (rate * 10 - 2)/10
+        })
+        break;
+    }
   }
 
   renderList() {
-    const { data } = this.state;
+    const { data, videoName } = this.state;
 
     return (
       <ul className={styles['nav-list']}>{data && data.map((item, firstIndex) => {
         if(typeof(item) === 'string') {
           return (
             <li
-              className={styles['list-item']}
+              className={`${styles['list-item']} ${ videoName === item ? styles['actived'] : ''}`}
               onClick={() => {
                 this.setState({
                   src: item,
@@ -122,7 +138,7 @@ export default class VideoPlayer extends Component {
                 {item.list.map((video, secondIndex) => {
                   return (
                     <li
-                      className={styles['list-item']}
+                      className={`${styles['list-item']} ${ videoName === video ? styles['actived'] : ''}`}
                       onClick={() => {
                         this.setState({
                           videoName: video,
