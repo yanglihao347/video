@@ -145,7 +145,6 @@ export default class VideoPlayer extends Component {
   }
 
   setRate(rate) {
-    console.log(rate);
     const video = document.getElementById('video');
     video && (video.playbackRate = rate);
   }

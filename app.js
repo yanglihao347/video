@@ -11,9 +11,14 @@ app.post('/getCollections', function(req, res) {
   var ip = getClientIP(req);
   res.header('Access-Control-Allow-Origin', '*');
   fs.readdir('./dist/videos', function(err, collections) {
+    
     res.json({
       code: 200,
-      data: collections,
+      data: collections.filter((collection) => {
+        if(collection.indexOf('大前端') === -1){
+          return true;
+        }
+      }),
       ip,
     })
   })
