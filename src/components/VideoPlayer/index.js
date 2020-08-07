@@ -95,6 +95,11 @@ export default class VideoPlayer extends Component {
     document.addEventListener('keydown', this.onKeyDown);
   }
 
+  componentDidUpdate() {
+    const { rate } = this.state;
+    this.setRate(rate);
+  }
+
   onKeyDown = (e) => {
     const { rate } = this.state;
     switch(e.keyCode) {
@@ -169,9 +174,6 @@ export default class VideoPlayer extends Component {
 
   render() {
     const { collectionName, rate, src, videoName } = this.state;
-
-    this.setRate(rate);
-
     return (
       <div className={styles['video-player']}>
         <header>
@@ -198,7 +200,7 @@ export default class VideoPlayer extends Component {
             {this.renderList()}
           </div>
           <div className={styles['content-container']}>
-            <video id="video" className={styles['abc']} src={`./videos/${collectionName}/${src}`} controls width="900px" />
+            <video id="video" className={styles['video']} src={`./videos/${collectionName}/${src}`} controls width="900px" />
             <div className={styles['rate-control']}>
               <div>{rate%1 === 0 ? rate + '.0X' : rate + 'X'}</div>
               <Button onClick={() => {
