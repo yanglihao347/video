@@ -113,6 +113,11 @@ export default class VideoPlayer extends Component {
           rate: (rate * 10 - 2)/10 < 0 ? 0 : (rate * 10 - 2)/10
         })
         break;
+      case 48:
+        this.setState({
+          rate: 1
+        })
+        break;
     }
   }
 
