@@ -205,7 +205,7 @@ export default class VideoPlayer extends Component {
             {this.renderList()}
           </div>
           <div className={styles['content-container']}>
-            <video id="video" className={styles['video']} src={`./videos/${collectionName}/${src}`} controls width="900px" />
+            <video playsInline autoPlay id="video" className={styles['video']} src={`./videos/${collectionName}/${src}`} controls width="900px" />
             <div className={styles['rate-control']}>
               <div>{rate%1 === 0 ? rate + '.0X' : rate + 'X'}</div>
               <Button onClick={() => {
