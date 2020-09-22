@@ -52,6 +52,7 @@ export default class VideoPlayer extends Component {
     // video.addEventListener('canplay', () => {
     //   console.log('======canplay');
     // })
+    video.setAttribute('webkit-playsinline', true);
     video.addEventListener('durationchange', () => {
       if(this.state.autoPlay) {
         this.setState({
