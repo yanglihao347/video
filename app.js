@@ -65,19 +65,21 @@ app.post('/query', function(req, res) {
 })
 
 app.post('/getFiles', function(req, res) {
+  const { collectionName } = req.body;
   res.header('Access-Control-Allow-Origin', '*');
-  fs.readdir('./dist/videos', function(err, files) {
-    const videoList = []
-    files.map((name) => {
-      let mp4Reg = /\.mp4$/i;
-      if(mp4Reg.test(name)) {
-        videoList.push(name);
-      }
+  const path = `./dist/videos/${collectionName}`;
+  fs.readdir(path, function(err, dirs) {
+    if(err) {
+      console.log(err, '====err');
+      return;
+    }
+    dirs.map(dir => {
+      fs.stat(`${path}/${dir}`,function(err, stat) {
+        console.log(stat.isFile())
+        console.log(stat.isDirectory())
+      });
     })
-    res.json({
-      code: 200,
-      data: videoList
-    })
+    res.end('111');
   })
 })
 
