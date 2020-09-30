@@ -83,7 +83,7 @@ app.post('/getFiles', function(req, res) {
   })
 })
 
-app.listen(4001, '0.0.0.0', function() {
+app.listen(3001, '0.0.0.0', function() {
   console.log('服务启动成功，端口3001')
 })
 
