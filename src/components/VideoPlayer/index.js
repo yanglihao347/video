@@ -22,7 +22,7 @@ export default class VideoPlayer extends Component {
     this.setState({
       collectionName,
     })
-    fetch(`${getEnv()}/query`, {
+    fetch(`${getEnv()}/api/query`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'

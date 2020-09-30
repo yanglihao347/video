@@ -7,7 +7,7 @@ import {
   Link
 } from 'react-router-dom';
 import './common.scss';
-import VideoPlayer from './components/videoPlayer';
+import VideoPlayer from './components/VideoPlayer';
 import HomePage from './components/HomePage';
 
 class App extends Component {

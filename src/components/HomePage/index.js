@@ -11,7 +11,7 @@ export default class HomePage extends Component {
     }
   }
   componentDidMount() {
-    fetch(`${getEnv()}/getCollections`, {
+    fetch(`${getEnv()}/api/getCollections`, {
       method: 'POST'
     }).then(res => res.json()).then((data) => {
       this.setState({

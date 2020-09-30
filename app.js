@@ -7,7 +7,7 @@ var app = express();
 app.use(express.static('dist'))
 app.use(bodyParser.urlencoded());
 
-app.post('/getCollections', function(req, res) {
+app.post('/api/getCollections', function(req, res) {
   var ip = getClientIP(req);
   res.header('Access-Control-Allow-Origin', '*');
   fs.readdir('./dist/videos', function(err, collections) {
@@ -24,7 +24,7 @@ app.post('/getCollections', function(req, res) {
   })
 })
 
-app.post('/query', function(req, res) {
+app.post('/api/query', function(req, res) {
   const { collectionName } = req.body;
   res.header('Access-Control-Allow-Origin', '*');
   fs.readdir(`./dist/videos/${collectionName}`, function(err, dirs) {
